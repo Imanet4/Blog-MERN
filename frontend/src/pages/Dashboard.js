@@ -6,10 +6,22 @@ import PostForm from '../components/PostForm';
 const Dashboard = () => {
   const [user, setUser] = useState(null);
 
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/auth/me', { withCredentials: true });
+        const res = await axios.get('http://localhost:5000/auth/me', { 
+          withCredentials: true,
+          headers: {
+          Authorization: `Bearer ${getCookie('token')}`
+
+        } 
+      });
         setUser(res.data.user);
       } catch (err) {
         console.log(err);
