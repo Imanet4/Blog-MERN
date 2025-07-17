@@ -1,0 +1,62 @@
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Dependency directories
+node_modules/
+*/node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for uploaded files
+uploads/**
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# macOS
+.DS_Store
+
+# Testing
+coverage/
+
+# Build files
+dist/
+build/
+
+# Package manager files
+package-lock.json
+yarn.lock
+
+# Debug files
+*.pem
+*.key
+
+# Database files
+*.db
+*.sqlite
+
+# Cache
+.cache/
+
+# TypeScript
+*.tsbuildinfo
