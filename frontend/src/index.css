@@ -1,0 +1,43 @@
+:root {
+  --forest-green: #228B22;
+  --warm-brown: #8B4513;
+  --light-cream: #FFF8E1;
+  --dark-green: #006400;
+}
+
+body {
+  background-color: var(--light-cream);
+  font-family: 'Georgia', serif;
+}
+
+.navbar {
+  background-color: var(--forest-green) !important;
+}
+
+.btn-primary {
+  background-color: var(--warm-brown);
+  border-color: var(--warm-brown);
+}
+
+.btn-primary:hover {
+  background-color: var(--dark-green);
+  border-color: var(--dark-green);
+}
+
+.card {
+  border: 1px solid var(--warm-brown);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--warm-brown);
+  border-radius: 4px;
+}

@@ -9,17 +9,34 @@ const PostForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must be logged in to create a post.');
+      return;
+    }
+
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
     if (image) formData.append('image', image);
 
     try {
-      await axios.post('http://localhost:5000/posts', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
+      const response = await axios.post('http://localhost:5000/posts', formData, {
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`  
+         }
       });
-      alert('Post created!');
+
+      if (response.status === 201) {
+        setTitle('');
+        setContent('');
+        console.log('Post created successfully:', response.data);
+      }
+    
+
     } catch (err) {
       console.log('Error creating post:', err);
       alert('Failed to create post. Please try again.');
@@ -27,6 +44,10 @@ const PostForm = () => {
   };
 
   return (
+    <div className="card shadow-sm p-4">
+  <h4 style={{ color: 'var(--forest-green)' }}>
+    <i className="fas fa-feather-alt me-2"></i>
+      Create New Book Review</h4>
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label>Title</label>
@@ -53,8 +74,13 @@ const PostForm = () => {
           onChange={(e) => setImage(e.target.files[0])}
         />
       </div>
-      <button type="submit" className="btn btn-primary">Create Post</button>
+      <button type="submit" className="btn btn-primary" style={{
+        backgroundColor: 'var(--forest-green)',
+        borderColor: 'var(--forest-green)',
+        color: 'white'
+      }}>Create Post</button>
     </form>
+    </div>
   );
 };
 

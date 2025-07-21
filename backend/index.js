@@ -12,10 +12,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({ credentials: true, origin: 'http://localhost:5000' }));
+app.use(cors({
+  origin: 'http://localhost:3000', // Adjust as needed
+}));
 app.use(express.json());
 app.use(cookieParser());
-// app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 
 // Database Connection
 mongoose.connect("mongodb://localhost:27017/Blog-API")

@@ -14,8 +14,13 @@ const Login = () => {
         e.preventDefault();
         try {
             const res = await axios.post('http://localhost:5000/auth/login',
-                {email, password},{ withCredentials: true });
-                if (res.data.user) navigate('/dashboard');
+                {email, password})
+
+                //Store both token and user data in localStorage
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('user', JSON.stringify(res.data.user));
+
+                navigate('/dashboard');
         } catch (err) {
             alert('Login failed');
         }
@@ -28,8 +33,12 @@ const Login = () => {
 
 
   return (
-    <div className="container mt-4">
-      <h1>Login</h1>
+    <div className="container py-5" style={{ maxWidth: '500px' }}>
+        <div className="card p-4 shadow-sm">
+          <h2 className="text-center mb-4" style={{ color: 'var(--forest-green)' }}>
+          <i className="fas fa-user-circle me-2"></i>Login</h2>
+
+
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label>Email</label>
@@ -52,7 +61,13 @@ const Login = () => {
         <button type="submit" className="btn btn-primary">Login</button>
       </form>
     </div>
-  )
-}
+    </div>
+  );
+  
+   
+
+};
+  
+
 
 export default Login

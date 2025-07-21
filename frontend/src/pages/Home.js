@@ -28,20 +28,39 @@ const Home = () => {
 
 
   return (
-    <div className="container mt-4">
-      <h1>Blog Posts</h1>
-      <div className="mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search posts..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button className="btn btn-primary mt-2" onClick={handleSearch}>Search</button>
-      </div>
-      <PostList posts={posts} />
+   <div className="container py-4">
+    <div className="text-center mb-5">
+      <h1 className="display-4" style={{ color: 'var(--forest-green)' }}>
+        <i className="fas fa-book me-2"></i>BookNook Blog
+      </h1>
+      <p className="lead text-muted">
+        Discover literary gems and share your thoughts
+      </p>
     </div>
+
+    <div className="row justify-content-center mb-4">
+      <div className="col-md-8">
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search book reviews..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button 
+            className="btn" 
+            onClick={handleSearch}
+            style={{ backgroundColor: 'var(--warm-brown)', color: 'white' }}
+          >
+            <i className="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <PostList posts={posts} />
+  </div>
   )
 };
 

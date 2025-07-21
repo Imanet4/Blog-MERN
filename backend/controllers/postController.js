@@ -1,8 +1,10 @@
 const Post = require('../models/post');
 const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
+    destination: (req, file, cb) => cb(null,path.join(__dirname, '..', 'uploads')),
     filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 
@@ -19,7 +21,7 @@ const createPost = async (req, res) => {
                 image: req.file ? req.file.path : null,
                 author: req.user.id,
             });
-            res.json(post);
+            res.status(201).json(post);
         }catch (err){
             res.status(400).json({ error: err.message || 'Error creating post' });
         }
