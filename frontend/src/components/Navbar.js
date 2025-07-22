@@ -1,8 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useCookies } from 'react-cookie';
 
 const Navbar = () => {
+
+      const [cookies, , removeCookie] = useCookies(['token']);
+      const navigate = useNavigate();
+      const isLoggedIn = !!cookies.token;
+
+      const handleLogout = () => {
+        removeCookie('token');
+        navigate('/login')
+      };
+
     return(
         <nav className="navbar navbar-expand-lg navbar-dark mb-4">
       <div className="container">
@@ -11,8 +22,17 @@ const Navbar = () => {
         </Link>
         <div className="navbar-nav">
           <Link className="nav-link" to="/">Home</Link>
-          <Link className="nav-link" to="/dashboard">Dashboard</Link>
+          {isLoggedIn && <Link className="nav-link" to="/dashboard">Dashboard</Link>}
+          {isLoggedIn ? (
+            <>
+             <span className="nav-link">Welcome, {cookies.username}</span>
+              <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>
+            </>
+          ) : ( 
+          
           <Link className="nav-link" to="/login">Login</Link>
+
+          )}
         </div>
       </div>
     </nav>

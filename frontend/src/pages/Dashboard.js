@@ -3,19 +3,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import PostForm from '../components/PostForm';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [cookies] = useCookies(['token']);
 
   
 
   useEffect(() => {
-      const token = localStorage.getItem('token');
-
-      //Then Immediate redirect if no token exists
-      if (!token) {
+      
+      if (!cookies.token) {
         navigate('/login');
         return;
       }
@@ -25,17 +25,15 @@ const Dashboard = () => {
 
         const res = await axios.get('http://localhost:5000/auth/me', {
           headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${cookies.token}`,
+        },
+        withCredentials: true
+      });
 
-        }});
 
-
-
-        setUser(res.data.user || JSON.parse(localStorage.getItem('user')));
+        setUser(res.data);
       } catch (err) {
         console.error('Dashboard auth check failed:', err);
-        localStorage.removeItem('token'); // Clear token on error
         navigate('/login'); // Redirect to login if auth fails
       } finally {
         setLoading(false);
@@ -44,7 +42,7 @@ const Dashboard = () => {
 
 
     fetchUser();
-  }, [navigate]);
+  }, [navigate, cookies.token]);
 
   if (loading) {
     return <div className="spinner-border text-primary" role="status"></div>;
@@ -54,15 +52,32 @@ const Dashboard = () => {
 
   return (
     <div className="container py-4">
-    <div className="card shadow-sm p-4">
-      <h2 style={{ color: 'var(--forest-green)' }}>
-        <i className="fas fa-feather-alt me-2"></i>
-        Welcome back, {user?.username}!
-      </h2>
-      <hr className="my-4" style={{ borderColor: 'var(--warm-brown)' }} />
-      <PostForm />
+      <div className="row">
+        <div className="col-md-4 mb-4">
+          <div className="card shadow-sm p-4">
+            <div className="text-center">
+              <div className="mb-3" style={{ fontSize: '5rem' }}>
+                <i className="fas fa-user-circle"></i>
+              </div>
+              <h3>{user?.username}</h3>
+              <p className="text-muted">{user?.email}</p>
+              <hr />
+              <p>Member since: {new Date().toLocaleDateString()}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-8">
+          <div className="card shadow-sm p-4">
+            <h2 style={{ color: 'var(--forest-green)' }}>
+              <i className="fas fa-feather-alt me-2"></i>
+              Create New Post
+            </h2>
+            <hr className="my-4" style={{ borderColor: 'var(--warm-brown)' }} />
+            <PostForm />
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
   );
 };
 

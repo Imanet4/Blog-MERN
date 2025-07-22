@@ -12,7 +12,11 @@ const register = async(req, res) => {
         const user = await User.create({ username, email, password });
         const token = jwt.sign({ id: user._id}, process.env.JWT_SECRET,
             {expiresIn: '1h'});
-            res.cookie('token', token,{httpOnly: true}).json({ user });
+            res.cookie('token', token,{
+                httpOnly: true,
+                maxAge: 3600000, // 1 hour
+                path: '/'
+            }).json({ user });
         }catch(err) {
             res.status(400).json({ error: err.message || 'Registration failed' })
     }
@@ -44,6 +48,7 @@ const logout = (req, res) => {
 };
 
 module.exports = { register, login, logout };
+
 
 
 

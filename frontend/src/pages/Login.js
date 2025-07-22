@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 
 
@@ -9,18 +10,18 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const [, setCookie] = useCookies(['token', 'username']);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const res = await axios.post('http://localhost:5000/auth/login',
-                {email, password})
+                {email, password}, { withCredentials: true });
 
-                //Store both token and user data in localStorage
-                localStorage.setItem('token', res.data.token);
-                localStorage.setItem('user', JSON.stringify(res.data.user));
-
+                setCookie('token', res.data.token);
+                setCookie('username', res.data.user.username);
                 navigate('/dashboard');
+
         } catch (err) {
             alert('Login failed');
         }
@@ -56,6 +57,7 @@ const Login = () => {
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
         <button type="submit" className="btn btn-primary">Login</button>
@@ -70,4 +72,4 @@ const Login = () => {
   
 
 
-export default Login
+export default Login;
