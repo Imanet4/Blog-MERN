@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [cookies] = useCookies(['token']);
+  const [cookies, setCookie] = useCookies(['token', 'username']);
 
   
 
@@ -23,14 +23,15 @@ const Dashboard = () => {
     const fetchUser = async () => {
       try {
 
-        const res = await axios.get('http://localhost:5000/auth/me', {
+        const res = await axios.get('/auth/me', {
           headers: {
           'Authorization': `Bearer ${cookies.token}`,
         },
         withCredentials: true
       });
 
-
+      //Setting username in cookie for Navbar to access
+        setCookie('username', res.data.username, {path: '/'});
         setUser(res.data);
       } catch (err) {
         console.error('Dashboard auth check failed:', err);

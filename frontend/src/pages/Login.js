@@ -6,24 +6,30 @@ import { useCookies } from 'react-cookie';
 
 
 
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const [, setCookie] = useCookies(['token', 'username']);
+    const [, setCookie] = useCookies(['token'])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/auth/login',
-                {email, password}, { withCredentials: true });
+          const response = await axios.post('/auth/login', { email, password}, {
+            withCredentials: true
+          });
 
-                setCookie('token', res.data.token);
-                setCookie('username', res.data.user.username);
-                navigate('/dashboard');
+          //Setting the token in cookies manually as fallback
+          setCookie('token', response.data.token, {
+            path:'/',
+            secure: process.env.NODE_ENV ==='production',
+            sameSite: process.env.NODE_ENV ==='production' ? 'strict' : 'lax'
+          })
+          navigate('/dashboard');
 
         } catch (err) {
-            alert('Login failed');
+            alert(err.response?.data?.error || 'Login failed');
         }
     };
 

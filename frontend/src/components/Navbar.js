@@ -2,16 +2,23 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 const Navbar = () => {
 
-      const [cookies, , removeCookie] = useCookies(['token']);
+      const [cookies, , removeCookie] = useCookies(['token', 'username']);
       const navigate = useNavigate();
       const isLoggedIn = !!cookies.token;
 
-      const handleLogout = () => {
+      const handleLogout = async () => {
+        try{ 
+          await axios.post('/auth/logout');
         removeCookie('token');
-        navigate('/login')
+        removeCookie('username');
+        navigate('/login');
+        } catch (err) {
+          console.error('Logout error', err)
+        }
       };
 
     return(
